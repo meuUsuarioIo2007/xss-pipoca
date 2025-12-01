@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  title: SSRF via Client JavaScript
+  title: Hacked By OP SEC GOV
   description: |
     <script>
       // Client-side SSRF (não tem CORS restriction do file://)
