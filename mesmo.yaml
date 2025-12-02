@@ -1,0 +1,6 @@
+swagger: '2.0'
+info:
+  title: Bypass Test 1
+  description: |
+    <math><mtext><xmp><svg><script>alert('XSS via SVG')</script>
+paths: {}
